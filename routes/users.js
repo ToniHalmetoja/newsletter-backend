@@ -1,9 +1,75 @@
 var express = require('express');
 var router = express.Router();
+const fs = require("fs");
+const cors = require("cors");
+const rand = require("random-key");
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.use(cors());
+
+router.post('/', function(req, res) {
+  let attemptUser = req.body;
+  let found = 0;
+  
+  fs.readFile("userList.json", function(err, data) {
+    if(err) {
+      console.log(err);
+    }
+
+    let users = JSON.parse(data);
+
+    for(user in users){
+      if(users[user].email == attemptUser.email && users[user].password == attemptUser.password){
+        found = 1;
+        res.send(JSON.stringify(users[user].id));
+      }
+    }
+
+    if(found==0){
+      res.status(403);
+      res.send("login fail");
+    }
+
+
+  });
 });
+
+
+router.post('/reg', function(req, res) {
+
+  let newUser = req.body;
+
+  fs.readFile("userList.json", function(err, data) {
+    if(err) {
+      console.log(err);
+    }
+
+    let users = JSON.parse(data);
+    let found = 0;
+
+    for(user in users){
+      if(users[user].email == newUser.email){
+        found = 1;
+        res.status(409);
+        res.send("fail due to dupe");
+      }
+    }
+
+    if(found == 0){
+      newUser.id = rand.generateDigits(10);
+      users.push(newUser);
+
+      fs.writeFile("userList.json", JSON.stringify(users, null, 2), function(err) {
+        if (err) {
+          console.log(err);
+        }
+
+        res.send("ok");
+      })  
+
+    }
+  });
+});
+
+
 
 module.exports = router;
