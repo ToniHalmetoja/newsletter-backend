@@ -20,7 +20,8 @@ router.post('/', function(req, res) {
     for(user in users){
       if(users[user].email == attemptUser.email && users[user].password == attemptUser.password){
         found = 1;
-        res.send(JSON.stringify(users[user].id));
+        let loggedIn = {id:users[user].id,newsletter_consent:users[user].newsletter_consent}
+        res.send(JSON.stringify(loggedIn));
       }
     }
 
@@ -28,7 +29,38 @@ router.post('/', function(req, res) {
       res.status(403);
       res.send("login fail");
     }
+  });
+});
 
+router.post('/newstoggle', function(req, res) {
+  let userToToggle = req.body;
+  
+  fs.readFile("userList.json", function(err, data) {
+    if(err) {
+      console.log(err);
+    }
+
+    let users = JSON.parse(data);
+    console.log(userToToggle);
+
+    for(user in users){
+      if(users[user].id == userToToggle.id){
+        if(users[user].newsletter_consent == false){
+          users[user].newsletter_consent = true;
+          
+        }
+        else if(users[user].newsletter_consent == true){
+          users[user].newsletter_consent = false;
+        }
+        fs.writeFile("userList.json", JSON.stringify(users, null, 2), function(err) {
+          if (err) {
+            console.log(err);
+          }
+
+        })  
+        res.send("ok");
+      }
+    }
 
   });
 });
