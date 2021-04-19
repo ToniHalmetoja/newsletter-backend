@@ -10,8 +10,21 @@ var adminRouter = require('./routes/admin');
 
 var app = express();
 
-app.use(cors());
+const MongoClient = require("mongodb").MongoClient;
 
+MongoClient.connect("mongodb+srv://admin:Tc7UAB2QqnU6FZE@newsletter.sxnqb.mongodb.net/Newsletter?retryWrites=true&w=majority"
+, {
+    useUnifiedTopology: true
+})
+.then(client =>  {
+    console.log("Connection established");
+
+    const db = client.db("newsletter");
+    app.locals.db = db;
+})
+
+
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

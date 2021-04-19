@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const fs = require("fs");
+var mongodb = require("mongodb");
 let validated = 0;
 
 /* GET users listing. */
@@ -21,19 +22,9 @@ router.post("/login", function(req, res) {
   let attemptUser = req.body.adminName;
   let attemptPass = req.body.adminPassword;
 
-  fs.readFile("adminList.json", function(err, data) {
-    if(err) {
-      console.log(err);
-    }
-
-    let admins = JSON.parse(data);
-
-
-    for(user in admins){
-      if(admins[user].username == attemptUser && admins[user].password == attemptPass){
+    if(attemptUser == "admin" && attemptPass == "test"){
         validated = 1;
         res.redirect("/admin/all");
-      }
     }
 
     if(validated==0){
@@ -41,7 +32,6 @@ router.post("/login", function(req, res) {
       res.send("Invalid username or password"); 
       return;
     }
-  });
 });
 
 router.get("/logout", function(req, res) {
@@ -53,14 +43,16 @@ router.get("/logout", function(req, res) {
 router.get("/all", function(req, res) {
   if(validated == 1){
 
+
+
     let htmlHead = `<title>Userlist</title><div><h2>All users</h2></div>`
 
-    fs.readFile("userList.json", function(err, data) {
-      if(err) {
-        console.log(err);
-      }
+    req.app.locals.db.collection("userList").find().toArray()
+    .then(results => {
 
-      let users = JSON.parse(data);
+    
+
+      let users = results;
 
       for (user in users) {
         htmlHead += `<div><b>ID:</b> ${users[user].id} <b>Email:</b> ${users[user].email} <b>Wants newsletter?</b> ${ (users[user].newsletter_consent) ? "Yes" : "No"}</div>`
@@ -71,6 +63,9 @@ router.get("/all", function(req, res) {
 
       res.send(htmlHead);
     })
+
+
+
   }
   else{
     res.redirect("/admin");
@@ -82,12 +77,10 @@ router.get("/newsletter", function(req, res) {
   if(validated == 1){
     let htmlHead = `<title>Userlist</title><div><h2>Newsletter subscribers</h2></div>`
 
-    fs.readFile("userList.json", function(err, data) {
-      if(err) {
-        console.log(err);
-      }
+    req.app.locals.db.collection("userList").find().toArray()
+    .then(results => {
 
-      let users = JSON.parse(data);
+      let users = results;
 
       for (user in users) {
         if(users[user].newsletter_consent == true){
