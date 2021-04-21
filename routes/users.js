@@ -28,6 +28,9 @@ router.post('/', function(req, res){
           return;
         }
     } 
+    else if(user[0].email != attemptUser.email){
+      res.status(403).send("Invalid username or password!");
+    }
   })
 })
 
@@ -60,8 +63,7 @@ router.post('/reg', function(req, res) {
       res.send("You have registered. Please log in with your new username and password.");
     }
     else{
-      res.status(409);
-      res.send("Email already exists in database.");
+      res.status(409).send("Email already exists in database.");
     }
   })
 
