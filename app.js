@@ -10,6 +10,8 @@ var adminRouter = require('./routes/admin');
 
 var app = express();
 
+app.use(cors());
+
 const MongoClient = require("mongodb").MongoClient;
 
 MongoClient.connect("mongodb+srv://admin:Tc7UAB2QqnU6FZE@newsletter.sxnqb.mongodb.net/Newsletter?retryWrites=true&w=majority"

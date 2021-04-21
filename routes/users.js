@@ -7,84 +7,62 @@ var mongodb = require("mongodb");
 
 router.use(cors());
 
-router.get('/', function(req, res){
-  req.app.locals.db.collection("userList").find().toArray()
-  .then(results => {
-    console.log(results);
-  })
+router.post('/', function(req, res){
+  let attemptUser = req.body;
 
-  res.send("readasd");
+  req.app.locals.db.collection("userList").find({"email": attemptUser.email, "password": attemptUser.password}).toArray()
+  .then(results => {
+    let user = results;
+    if(user == false){
+      res.status(403).send("Invalid username or password!");
+    }
+    else if(user[0].email == attemptUser.email && user[0].password == attemptUser.password){
+        let loggedIn = {id:user[0].id,newsletter_consent:user[0].newsletter_consent};
+        console.log(loggedIn);
+        res.send(JSON.stringify(loggedIn));
+        return;
+    } 
+  })
 })
 
-router.post('/', function(req, res) {
-
-  
-  // let attemptUser = req.body;
-  // let found = 0;
-  
-  // fs.readFile("userList.json", function(err, data) {
-  //   if(err) {
-  //     console.log(err);
-  //   }
-
-  //   let users = JSON.parse(data);
-
-  //   for(user in users){
-  //     if(users[user].email == attemptUser.email && users[user].password == attemptUser.password){
-  //       found = 1;
-  //       let loggedIn = {id:users[user].id,newsletter_consent:users[user].newsletter_consent}
-  //       res.send(JSON.stringify(loggedIn));
-  //     }
-  //   }
-
-  //   if(found==0){
-  //     res.status(403);
-  //     res.send("login fail");
-  //   }
-  // });
-});
-
 router.post('/newstoggle', function(req, res) {
-  // let userToToggle = req.body;
-  
-  // fs.readFile("userList.json", function(err, data) {
-  //   if(err) {
-  //     console.log(err);
-  //   }
+  let userToToggle = req.body;
 
-  //   let users = JSON.parse(data);
-  //   console.log(userToToggle);
+  if(userToToggle.newsletter_consent == "false"){
+    console.log("beep");
+    req.app.locals.db.collection("userList").updateOne({"id":userToToggle.id}, {$set: {"newsletter_consent": true}});
+    
+    res.send({"result": true});
+  }
 
-  //   for(user in users){
-  //     if(users[user].id == userToToggle.id){
-  //       if(users[user].newsletter_consent == false){
-  //         users[user].newsletter_consent = true;
-          
-  //       }
-  //       else if(users[user].newsletter_consent == true){
-  //         users[user].newsletter_consent = false;
-  //       }
-  //       fs.writeFile("userList.json", JSON.stringify(users, null, 2), function(err) {
-  //         if (err) {
-  //           console.log(err);
-  //         }
+  else if(userToToggle.newsletter_consent == "true"){
+    console.log("boop");
+    req.app.locals.db.collection("userList").updateOne({"id":userToToggle.id}, {$set: {"newsletter_consent": false}});
 
-  //       })  
-  //       res.send("ok");
-  //     }
-  //   }
+    res.send({"result": false});
+  }
 
-  // });
 });
 
 
 router.post('/reg', function(req, res) {
 
-  req.app.locals.db.collection("userList").insertOne(req.body)
+  let newReg = req.body;
+
+  req.app.locals.db.collection("userList").find({"email": newReg.email}).toArray()
   .then(result => {
-    console.log(result);
-    res.redirect("/show");
+    if(result == false){
+      newReg.id = rand.generateDigits(10);
+      req.app.locals.db.collection("userList").insertOne(newReg);
+      res.send("You have registered. Please log in with your new username and password.");
+    }
+    else{
+      res.status(409);
+      res.send("Email already exists in database.");
+    }
   })
+
+
 
   // let newUser = req.body;
 

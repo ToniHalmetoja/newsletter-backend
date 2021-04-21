@@ -27,7 +27,7 @@ router.post("/login", function(req, res) {
         res.redirect("/admin/all");
     }
 
-    if(validated==0){
+    if(validated==0){s
       res.status(403);
       res.send("Invalid username or password"); 
       return;
