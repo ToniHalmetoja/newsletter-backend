@@ -25,12 +25,12 @@ router.post('/', function(req, res){
         if(decryptedPass == attemptUser.password){
           let loggedIn = {id:user[0].id,newsletter_consent:user[0].newsletter_consent};
           res.send(JSON.stringify(loggedIn));
-          return;
+        }
+        else if(decryptedPass != attemptUser.password){
+          res.status(403).send("Invalid username or password!");
         }
     } 
-    else if(user[0].email != attemptUser.email){
-      res.status(403).send("Invalid username or password!");
-    }
+    
   })
 })
 
