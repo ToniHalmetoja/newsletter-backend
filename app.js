@@ -12,9 +12,12 @@ var app = express();
 
 app.use(cors());
 
-const MongoClient = require("mongodb").MongoClient;
+const MongoClient = require("mongodb").MongoClient; 
 
-MongoClient.connect("mongodb+srv://admin:"+process.env.API_KEY+"@newsletter.sxnqb.mongodb.net/Newsletter?retryWrites=true&w=majority"
+let connectionString = "mongodb+srv://admin:"+process.env.API_KEY+"@newsletter.sxnqb.mongodb.net/Newsletter?retryWrites=true&w=majority";
+console.log(connectionString);
+
+MongoClient.connect(connectionString
 , {
     useUnifiedTopology: true
 })
