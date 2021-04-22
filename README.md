@@ -4,4 +4,4 @@ A school project. Effectively, just a demonstration of a login/subscription syst
 
 If you don't know what this is, though, I doubt you'll find anything of interest here!
 
-Frontend a brief guide can be found at https://github.com/ToniHalmetoja/newsletter-frontend/
+Frontend and a brief guide can be found at https://github.com/ToniHalmetoja/newsletter-frontend/
