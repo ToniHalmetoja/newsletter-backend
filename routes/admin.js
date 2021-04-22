@@ -28,7 +28,7 @@ router.post("/login", function(req, res) {
 
     let admin = results;
 
-    if(attemptUser == "admin" && attemptPass == CryptoJS.AES.decrypt(admin[0].password,process.env.SALT_KEY).toString(CryptoJS.enc.Utf8)){
+    if(attemptPass == CryptoJS.AES.decrypt(admin[0].password,process.env.SALT_KEY).toString(CryptoJS.enc.Utf8)){
         validated = 1;
         res.redirect("/admin/all");
     }
