@@ -4,7 +4,6 @@ const cors = require("cors");
 const rand = require("random-key");
 const CryptoJS = require("crypto-js");
 const mongodb = require("mongodb");
-const saltKey = "aMyster1ousS@ltKey";
 
 router.use(cors());
 
@@ -20,7 +19,7 @@ router.post('/', function(req, res){
     }
 
     else if(user[0].email == attemptUser.email){
-        let decryptedPass = CryptoJS.AES.decrypt(user[0].password,saltKey).toString(CryptoJS.enc.Utf8);
+        let decryptedPass = CryptoJS.AES.decrypt(user[0].password,process.env.SALT_KEY).toString(CryptoJS.enc.Utf8);
         if(decryptedPass == attemptUser.password){
           let loggedIn = {id:user[0].id,newsletter_consent:user[0].newsletter_consent};
           res.send(JSON.stringify(loggedIn));
@@ -57,7 +56,7 @@ router.post('/reg', function(req, res) {
   .then(result => {
     if(result == false){
       newReg.id = rand.generateDigits(10);
-      newReg.password = CryptoJS.AES.encrypt(newReg.password,saltKey).toString();
+      newReg.password = CryptoJS.AES.encrypt(newReg.password,process.env.SALT_KEY).toString();
       req.app.locals.db.collection("userList").insertOne(newReg);
       res.send("You have registered. Please log in with your new username and password.");
     }
