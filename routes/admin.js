@@ -23,7 +23,7 @@ router.post("/login", function(req, res) {
   let attemptUser = req.body.adminName;
   let attemptPass = req.body.adminPassword;
 
-  req.app.locals.db.collection("userList").find({"email": attemptUser.email}).toArray()
+  req.app.locals.db.collection("admin").find({"name": attemptUser}).toArray()
   .then(results => {
 
     let admin = results;
