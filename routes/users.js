@@ -1,11 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const cors = require("cors");
 const rand = require("random-key");
 const CryptoJS = require("crypto-js");
 const mongodb = require("mongodb");
-
-router.use(cors());
 
 router.post('/', function(req, res){
 
