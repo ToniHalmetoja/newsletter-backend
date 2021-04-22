@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const fs = require("fs");
+const CryptoJS = require("crypto-js");
 var mongodb = require("mongodb");
 let validated = 0;
 

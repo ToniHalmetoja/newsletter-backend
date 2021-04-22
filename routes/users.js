@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const fs = require("fs");
 const cors = require("cors");
 const rand = require("random-key");
 const CryptoJS = require("crypto-js");
