@@ -6,6 +6,7 @@ let validated = 0;
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
+
       let adminLogin = `<title>Admin login</title>
                     <div><h2>Login as Admin</h2>
                     <form action="/admin/login" method="post">
@@ -22,7 +23,12 @@ router.post("/login", function(req, res) {
   let attemptUser = req.body.adminName;
   let attemptPass = req.body.adminPassword;
 
-    if(attemptUser == "admin" && attemptPass == "test"){
+  req.app.locals.db.collection("userList").find({"email": attemptUser.email}).toArray()
+  .then(results => {
+
+    let admin = results;
+
+    if(attemptUser == "admin" && attemptPass == CryptoJS.AES.decrypt(admin[0].password,process.env.SALT_KEY).toString(CryptoJS.enc.Utf8)){
         validated = 1;
         res.redirect("/admin/all");
     }
@@ -32,6 +38,8 @@ router.post("/login", function(req, res) {
       res.send("Invalid username or password"); 
       return;
     }
+
+  });
 });
 
 router.get("/logout", function(req, res) {
@@ -43,14 +51,10 @@ router.get("/logout", function(req, res) {
 router.get("/all", function(req, res) {
   if(validated == 1){
 
-
-
     let htmlHead = `<title>Userlist</title><div><h2>All users</h2></div>`
 
     req.app.locals.db.collection("userList").find().toArray()
-    .then(results => {
-
-    
+    .then(results => {    
 
       let users = results;
 
@@ -64,14 +68,11 @@ router.get("/all", function(req, res) {
       res.send(htmlHead);
     })
 
-
-
   }
   else{
     res.redirect("/admin");
   }
 });
-
 
 router.get("/newsletter", function(req, res) {
   if(validated == 1){
@@ -99,8 +100,5 @@ router.get("/newsletter", function(req, res) {
     res.redirect("/admin");
   }
 });
-
-
-
 
 module.exports = router;

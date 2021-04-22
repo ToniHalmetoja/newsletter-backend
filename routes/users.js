@@ -8,6 +8,7 @@ const mongodb = require("mongodb");
 router.use(cors());
 
 router.post('/', function(req, res){
+
   let attemptUser = req.body;
 
   req.app.locals.db.collection("userList").find({"email": attemptUser.email}).toArray()
