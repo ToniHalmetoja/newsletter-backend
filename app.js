@@ -10,12 +10,14 @@ var adminRouter = require('./routes/admin');
 
 var app = express();
 
-const MongoClient = require("mongodb").MongoClient; 
+const MongoClient = require("mongodb").MongoClient;
 
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+    extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -23,17 +25,16 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 
-let connectionString = "mongodb+srv://admin:"+process.env.API_KEY+"@newsletter.sxnqb.mongodb.net/Newsletter?retryWrites=true&w=majority";
+let connectionString = "mongodb+srv://admin:" + process.env.API_KEY + "@newsletter.sxnqb.mongodb.net/Newsletter?retryWrites=true&w=majority";
 
-MongoClient.connect(connectionString
-, {
-    useUnifiedTopology: true
-})
-.then(client =>  {
-    console.log("Connection established");
+MongoClient.connect(connectionString, {
+        useUnifiedTopology: true
+    })
+    .then(client => {
+        console.log("Connection established");
 
-    const db = client.db("newsletter");
-    app.locals.db = db;
-})
+        const db = client.db("newsletter");
+        app.locals.db = db;
+    })
 
 module.exports = app;
