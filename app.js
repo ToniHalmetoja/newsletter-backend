@@ -29,7 +29,6 @@ app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 
 let connectionString = "mongodb+srv://admin:"+process.env.API_KEY+"@newsletter.sxnqb.mongodb.net/Newsletter?retryWrites=true&w=majority";
-console.log(connectionString);
 
 MongoClient.connect(connectionString
 , {
