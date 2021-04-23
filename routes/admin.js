@@ -52,23 +52,8 @@ router.get("/logout", function (req, res) {
 
 
 router.get("/all", function (req, res) {
-  let htmlHead = `<head><style>
-  table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #dddddd;
-  }
-  </style></head>`
+  let htmlHead = `<head><link rel="stylesheet" href="/stylesheets/style.css"></head>`
+
   if (validated == 1) {
 
     htmlHead += `<title>Userlist</title><div><h2>All users</h2></div><div><table><tr><th>
@@ -96,6 +81,7 @@ router.get("/all", function (req, res) {
 });
 
 router.get("/newsletter", function (req, res) {
+  let htmlHead = `<head><link rel="stylesheet" href="/stylesheets/style.css"></head>`
   if (validated == 1) {
     htmlHead += `<title>Userlist</title><div><h2>Newsletter subscribers</h2></div><table><tr><th>
     ID</th><th>Email</th></tr>`
