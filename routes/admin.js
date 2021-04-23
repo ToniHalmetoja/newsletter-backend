@@ -52,9 +52,26 @@ router.get("/logout", function (req, res) {
 
 
 router.get("/all", function (req, res) {
+  let htmlHead = `<head><style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  </style></head>`
   if (validated == 1) {
 
-    let htmlHead = `<title>Userlist</title><div><h2>All users</h2></div><div><table><tr><th>
+    htmlHead += `<title>Userlist</title><div><h2>All users</h2></div><div><table><tr><th>
     ID</th><th>Email</th><th>Wants newsletter?</th></tr>`
 
     req.app.locals.db.collection("userList").find().toArray()
@@ -80,7 +97,7 @@ router.get("/all", function (req, res) {
 
 router.get("/newsletter", function (req, res) {
   if (validated == 1) {
-    let htmlHead = `<title>Userlist</title><div><h2>Newsletter subscribers</h2></div><table><tr><th>
+    htmlHead += `<title>Userlist</title><div><h2>Newsletter subscribers</h2></div><table><tr><th>
     ID</th><th>Email</th></tr>`
 
     req.app.locals.db.collection("userList").find().toArray()
@@ -93,7 +110,7 @@ router.get("/newsletter", function (req, res) {
             htmlHead += `<tr><td>${users[user].id}</td><td>${users[user].email}</td></tr>`
           }
         }
-        
+
         htmlHead += `</table></div>`
         htmlHead += `<div><a href="/admin/all">Show all users</a></div>`
         htmlHead += `<div><a href="/admin/logout">Log out admin</a></div>`
