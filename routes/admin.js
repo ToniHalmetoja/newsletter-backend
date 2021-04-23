@@ -54,7 +54,8 @@ router.get("/logout", function (req, res) {
 router.get("/all", function (req, res) {
   if (validated == 1) {
 
-    let htmlHead = `<title>Userlist</title><div><h2>All users</h2></div>`
+    let htmlHead = `<title>Userlist</title><div><h2>All users</h2></div><div><table><tr><th>
+    ID</th><th>Email</th><th>Wants newsletter?</th></tr>`
 
     req.app.locals.db.collection("userList").find().toArray()
       .then(results => {
@@ -62,7 +63,7 @@ router.get("/all", function (req, res) {
         let users = results;
 
         for (user in users) {
-          htmlHead += `<div><b>ID:</b> ${users[user].id} <b>Email:</b> ${users[user].email} <b>Wants newsletter?</b> ${ (users[user].newsletter_consent) ? "Yes" : "No"}</div>`
+          htmlHead += `<tr><td>${users[user].id}</td><td>${users[user].email}</td><td>${(users[user].newsletter_consent) ? "Yes" : "No"}</td></tr>`
         }
 
         htmlHead += `<div><a href="/admin/newsletter">Show only users who want the newsletter</a></div>`

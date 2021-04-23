@@ -11,8 +11,6 @@ var adminRouter = require('./routes/admin');
 
 var app = express();
 
-
-
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
