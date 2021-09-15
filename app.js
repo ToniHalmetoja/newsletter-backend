@@ -3,6 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require("cors");
+var dotenv = require("dotenv").config() 
 const MongoClient = require("mongodb").MongoClient;
 
 var indexRouter = require('./routes/index');
@@ -24,7 +25,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 
-let connectionString = "mongodb+srv://admin:" + process.env.API_KEY + "@newsletter.sxnqb.mongodb.net/Newsletter?retryWrites=true&w=majority";
+let connectionString = "mongodb+srv://admin:"+ process.env.API_KEY + "@newsletter.sxnqb.mongodb.net/Newsletter?retryWrites=true&w=majority";
 
 MongoClient.connect(connectionString, {
         useUnifiedTopology: true
